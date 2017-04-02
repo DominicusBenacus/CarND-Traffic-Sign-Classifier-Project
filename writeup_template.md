@@ -28,37 +28,36 @@ The goals / steps of this project are the following:
 [image7]: ./examples/placeholder.png "Traffic Sign 4"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
-## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
-
----
-###Writeup / README
-
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one. You can submit your writeup as markdown or pdf. You can use this template as a guide for writing the report. The submission includes the project code.
-
-You're reading it! and here is a link to my [project code](https://github.com/udacity/CarND-Traffic-Sign-Classifier-Project/blob/master/Traffic_Sign_Classifier.ipynb)
 
 ###Data Set Summary & Exploration
 
 ####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
-The code for this step is contained in the second code cell of the IPython notebook.  
-
-I used the pandas library to calculate summary statistics of the traffic
+I used the numpy library to calculate summary statistics of the traffic
 signs data set:
 
-* The size of training set is ?
-* The size of test set is ?
+* The size of training set is?
+Number of training examples = 34799 used n_train = y_train.shape[0]
+
+
+* The size of test set is?
+Number of testing examples = 12630 used n_test = y_test.shape[0]
+
 * The shape of a traffic sign image is ?
-* The number of unique classes/labels in the data set is ?
+Image data shape = (32, 32, 3) used image_shape = X_train[0].shape
+
+
+* The number of unique classes/labels in the data set is?
+Number of classes = 43 used sign_classes, class_indices, class_counts = np.unique(y_train, return_index = True, return_counts = True)
+n_classes = class_counts.shape[0]
 
 ####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
-The code for this step is contained in the third code cell of the IPython notebook.  
+The code for this step is contained in the In[15] and In[14] code cell of the IPython notebook.  
 
 Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
 
-![alt text][image1]
+![][image1]
 
 ###Design and Test a Model Architecture
 
@@ -66,7 +65,7 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 
 The code for this step is contained in the fourth code cell of the IPython notebook.
 
-As a first step, I decided to convert the images to grayscale because ...
+As a first step, I decided to convert the images to grayscale because that is a recommondation out of the official LeNet paper. Colored images did not help for better acurracy
 
 Here is an example of a traffic sign image before and after grayscaling.
 
