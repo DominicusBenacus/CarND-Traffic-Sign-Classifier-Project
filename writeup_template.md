@@ -17,18 +17,6 @@ The goals / steps of this project are the following:
 * Summarize the results with a written report
 
 
-[//]: # (Image References)
-
-[image1]: ./examples/visualization.jpg "Visualization"
-[image2]: ./examples/grayscale.jpg "Grayscaling"
-[image3]: ./examples/random_noise.jpg "Random Noise"
-[image4]: ./examples/placeholder.png "Traffic Sign 1"
-[image5]: ./examples/placeholder.png "Traffic Sign 2"
-[image6]: ./examples/placeholder.png "Traffic Sign 3"
-[image7]: ./examples/placeholder.png "Traffic Sign 4"
-[image8]: ./examples/placeholder.png "Traffic Sign 5"
-
-
 ###Data Set Summary & Exploration
 
 ####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
@@ -46,7 +34,6 @@ Number of testing examples = 12630 used n_test = y_test.shape[0]
 * The shape of a traffic sign image is ?
 Image data shape = (32, 32, 3) used image_shape = X_train[0].shape
 
-
 * The number of unique classes/labels in the data set is?
 Number of classes = 43 used sign_classes, class_indices, class_counts = np.unique(y_train, return_index = True, return_counts = True)
 n_classes = class_counts.shape[0]
@@ -55,17 +42,29 @@ n_classes = class_counts.shape[0]
 
 The code for this step is contained in the In[15] and In[14] code cell of the IPython notebook.  
 
-Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
-
+Here is an exploratory visualization of the data set. It is a histogram over all used classes int he training set. First picture is a ramdom single plot of one traffic sign. 
 ![][image1]
+![][image2]
 
 ###Design and Test a Model Architecture
 
 ####1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
-The code for this step is contained in the fourth code cell of the IPython notebook.
+Code cell of ipynb: []:
+* At first:
+    I decided to convert the images to grayscale because that is a recommondation out of the official LeNet paper. Colored images did not help for better acurracy as Pierre Sermanet and Yann LeCun mentioned in [their papers](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf "Traffic Sign Recognition with Multi-Scale Convolutional Networks")
 
-As a first step, I decided to convert the images to grayscale because that is a recommondation out of the official LeNet paper. Colored images did not help for better acurracy
+    There are very much methoids to this. I tried out cv2 methods like cv2.cvtColor(X[i], cv2.COLOR_BGR2GRAY) and at the end I decided to use a simple factor based method and multiplied the color chanel. The factor values I figured out using [this paper] (http://entropymine.com/imageworsener/grayscale/)
+* Second step is to normalize 
+    It is easier to train the network and prevent gradient explotion or SGD fails to converge.
+    There are more reasons: It make training faster and reduce the risk of getting stuck in local optima, what is a big risk. But there are many papers about this question. So it depends also on the architecture and the origin data structure. [Here are some more iscussions](http://stackoverflow.com/questions/4674623/why-do-we-have-to-normalize-the-input-for-an-artificial-neural-network). Overall there is a consense to use normalized data according to LeNet architecture and often according stochastic gradient descent method.
+
+    I did a simple normalization by division like X = (X / 255.-0.5).astype(np.float32) where X is x_train or y_train or... every other function input
+ 
+  
+
+
+https://github.com/navoshta/traffic-signs/blob/master/Traffic_Signs_Recognition.ipynb
 
 Here is an example of a traffic sign image before and after grayscaling.
 
@@ -182,3 +181,15 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 
 
 For the second image ... 
+
+
+[//]: # (Image References)
+
+[image1]: ./examples/exploratyDataSetSinglePrint.PNG "Visualization random training image"
+[image2]: ./examples/histogramBalancOfImages.PNG "Plot of how the training data is balanced"
+[image3]: ./examples/random_noise.jpg "Random Noise"
+[image4]: ./examples/placeholder.png "Traffic Sign 1"
+[image5]: ./examples/placeholder.png "Traffic Sign 2"
+[image6]: ./examples/placeholder.png "Traffic Sign 3"
+[image7]: ./examples/placeholder.png "Traffic Sign 4"
+[image8]: ./examples/placeholder.png "Traffic Sign 5"
