@@ -18,7 +18,8 @@ The goals / steps of this project are the following:
 ####1. Provide a basic summary of the data set and identify where in your code the summary was done. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.
 
 I used the numpy library to calculate summary statistics of the traffic
-signs data set:
+signs data set: 
+Code cell of ipynb: [45]:
 
 * The size of training set is?
 Number of training examples = 34799 used n_train = y_train.shape[0]
@@ -35,7 +36,7 @@ n_classes = class_counts.shape[0]
 
 ####2. Include an exploratory visualization of the dataset and identify where the code is in your code file.
 
-The code for this step is contained in the In[15] and In[14] code cell of the IPython notebook.  
+The code for this step is contained in the In[167] and In[6] code cell of the IPython notebook.  
 
 Here is an exploratory visualization of the data set. It is a histogram over all used classes in the training set. First picture is a ramdom single plot of one traffic sign. 
 ![][image1]
@@ -45,21 +46,22 @@ Here is an exploratory visualization of the data set. It is a histogram over all
 
 ####1. Describe how, and identify where in your code, you preprocessed the image data. What tecniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.
 
-Code cell of ipynb: [9]:
+Code cell of ipynb: [4,5,6,7,8,14]:
 * At first:
     I decided to convert the images to grayscale because that is a recommondation out of the official LeNet paper. Colored images did not help for better acurracy as Pierre Sermanet and Yann LeCun mentioned in [their papers](http://yann.lecun.com/exdb/publis/pdf/sermanet-ijcnn-11.pdf "Traffic Sign Recognition with Multi-Scale Convolutional Networks")
 
-    There are very much methods to this. I tried out cv2 methods like cv2.cvtColor(X[i], cv2.COLOR_BGR2GRAY) and at the end I decided to use a simple factor based method and multiplied each color channel inthe 4d numpz array. To figure out I did implement the know ledge out of this page [this paper] (http://entropymine.com/imageworsener/grayscale/)
+    There are very much methods to this. I tried out cv2 methods like cv2.cvtColor(X[i], cv2.COLOR_BGR2GRAY) and at the end I decided to use a simple factor based method and multiplied each color channel inthe 4d numpy array. To figure out I did implement the know ledge out of this page [this paper] (http://entropymine.com/imageworsener/grayscale/)
 * Second step is to normalize --> [9] 
     Why normalization? In common it is easier to train the network and prevent gradient explotion or SGD fails according to converge.
     There are more reasons: It make training faster and reduce the risk of getting stuck in local optima, what is a big risk. But there are many papers about this question. So it depends also on the architecture and the origin data structure. [Here are some more iscussions](http://stackoverflow.com/questions/4674623/why-do-we-have-to-normalize-the-input-for-an-artificial-neural-network). Overall there is a consense to use normalized data according to LeNet architecture and often according stochastic gradient descent method.
 
     I did a simple normalization by division like X = (X / 255.-0.5).astype(np.float32) where X is x_train or y_train or... every other function input
-* Third step equalization Hist. Like we can see in the picture below. The images are often looks very dark and it is not           possible to detect good edges because of the bad contrast.
+* Third step equalization Hist. Like we can see in the picture below. The images are often      looks very dark and it is not possible to detect good edges because of the bad contrast.
     To get better contrast we need a more balanced grayscaled image. So I tried different libs like open cv. Some artifacts are still implemented but out commented in the ipynb. At the end I used the skimage libarz with exposure.equalize_hist(). In origin I wanted to use equalizationAdaphist(), but I found no way to get running it in code. So the equalize_hist is a good solution. Not perfect but it capsulates many issues of the trainng data. 
 
     One can see the differences between color to grazscale to equaliyation int the below. 
- 
+
+* for preprocessing the image I implement a pipeline in cell 14. 
 
 Here is an example of a traffic sign image before and aftter the preprocessing steps
 
@@ -72,12 +74,12 @@ My expectation was to get a good accury after these two steps of pre processing.
 
 So I decided to extend my pre processing method. But because of huge efforts with get running my IT and much problems with aws I decided to take a class of [this repository](https://github.com/navoshta/traffic-signs/blob/master/Traffic_Signs_Recognition.ipynb).
 
-I adapted the fucntion a little bit in case of function arguments and file handling also the number of maximum images of each class.
+I adapted the function a little bit in case of function arguments and file handling also the number of maximum images of each class.
 
 The whole prprocess of the image data runs in cell [14]
 
- * The first step Cell[11] the class provides to flip the      training data in different directions.
- * Second step Cell[8 and 11] is to argument the flipped       data to get a more balanced training set. Why do we       do this step. So like we saw in the histogram above,      the training set is very inhomogenious. That leads to     overfit the model according to some special signs         which are over represented.   
+ * The first step Cell[8] the class provides to flip the training data in different directions.
+ * Second step Cell[5 and 8] is to argument the flipped data to get a more balanced training set. Why do we do this step. So like we saw in the histogram above,      the training set is very inhomogenious. That leads to overfit the model according to some special signs which are over represented.   
 
 To cross validate my model, I randomly split the training data into a training set and validation set. I did this by using from sklearn.model_selection import train_test_spli(). I split it into 25% vilidation and 75% training data. 
 
@@ -121,13 +123,13 @@ My final model consisted of the following layers:
 
 Located in[28]
 
-To train the model, I used a LeNet model out of the tensor flow lesson from udacity.
+To train the model, I used a LeNet (cell[9]) model out of the tensor flow lesson from udacity.
 
-The optimizer: Adam optimizer --> I use, cause it is the default optimizer. i did not know much about optimizer advantages or which other optimizer it gives and when should I use that .
+The optimizer: Adam optimizer --> I use, cause it is the default optimizer. I did not know much about optimizer advantages or which other optimizer it gives and when should I use that .
 
 The batch size: 128 I like this value. So I experienced a lot with the parameter of the batch size. So and in my opinion this size work well for me.
 
-Number of epoch: I started with 8 epoch and then 10,16,20. As I take the non balanced and argumented training set a number of epoch raound about 8 worked best. So after my trainng set increased up to 113000 this number of epochs did not work very well anymore. So I alternately played with the learning rate and the number of epoch. So in my feeling the best result after a few training sessions was to take a learning rate of 0.0008 and a number of epochs of 30.
+Number of epoch: I started with 8 epoch and then 10,16,20,30. As I take the non balanced and argumented training set a number of epoch raound about 8 worked best. So after my trainng set increased up to 113000 this number of epochs did not work very well anymore. So I alternately played with the learning rate and the number of epoch. So in my feeling the best result after a few training sessions was to take a learning rate of 0.0008 and a number of epochs of 30. One could play even harder to get a better acurracy but I spend much tie in this project and learned a lot about prepracessing and also hyperparameter so I think that is also a goad result out of this project.
 
 So the two other hyperparameter like mu and sigma I did not change. i played a short time but the results were not good.
 
@@ -147,9 +149,10 @@ If an iterative approach was chosen:
     * No problems after adapted it according the classes etc.
 * Spending so much effort into get things working in general... aws and on and     on. Furthermore my company notebook was not working as it should and I hab      to buy a new one. Finally I did not have the time for studying different        architecture. Sorry for that.
 * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem?
-    * So a convolution makes sense because we can detect 
+    * In this same hypothetical case where we use a fully connected layer to extract the features, the input image of size 32x32 and a hidden layer having 1000 features will require an order of 106 coefficients, a huge memory requirement. In the convolutional layer, the same coefficients are used across different locations in the space, so the memory requirement is drastically reduced.
+    * Easier and better training Again using the standard neural network that would be equivalent to a CNN, because the number of parameters would be much higher, the raining time would also increase proportionately. In a CNN, since the number of parameters is drastically reduced, training time is proportionately reduced. Also, assuming perfect training, we can design a standard neural network whose performance would be same as a CNN. But in practical training, a standard neural network equivalent to CNN would have more parameters, which would lead to more noise addition during the training process. Hence, the performance of a standard neural network equivalent to a CNN will always be poorer. [source](https://ip.cadence.com/uploads/901/cnn_wp-pdf)
 
-Dropout is not a good idea like described in [here](https://www.reddit.com/r/MachineLearning/comments/42nnpe/why_do_i_never_see_dropout_applied_in/)
+    Dropout is not a good idea like described in [here](https://www.reddit.com/r/MachineLearning/comments/42nnpe/why_do_i_never_see_dropout_applied_in/)
 
 If a well known architecture was chosen:
 * What architecture was chosen? no special archtitecture was choosen
@@ -168,38 +171,37 @@ Here are five German traffic signs that I found on the web:
 
 ####2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. Identify where in your code predictions were made. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
 
-The code for making predictions on my final model is located in the tenth cell of the Ipython notebook.
+The code for making predictions on my final model is located in the tenth cell of the Ipython notebook [27]
 
 Here are the results of the prediction:
 
 | Image			        |     Prediction	        					| 
 |:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
+| No entry      		| No entry   									| 
+| Speed limit 30		| speed limit 20 								|
+| Speed limit 80		| speed limit 120								|
+| Yield	      		    | somethink :-)					 				|
+| Stop      			| stop                							|
 
 
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+The model was able to correctly guess 2 of the 5 traffic signs, which gives an accuracy of 40%.
 
 ####3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction and identify where in your code softmax probabilities were outputted. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
+So for look on the top five predictions I build a plot pipeline shown in cell[76,77]
 
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
+Here are my prediction results for all five images including the coresponding top 5 class id and the linked probabilities ![alt text][image11]
 
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
+As vusiualized it looks like this for example: ![alt text][image12]
 
 
-For the second image ... 
+Description of the results for ne Images:
 
+The fourth sign is a yield but there is also  another sign in the test image. So here I think it would als be difficult for better trained models to decide whether there is a yield or something else.
+
+I wonde why the speed limit 80 is classified as 120 because this is a very high quality image without shadows.
+
+At the end I am very satisfied with my learning curve depending on all the IT impediments on the beginning according to aws or my company notebook. Sure the validation result of my model is not very good but I learned a lot about preprocessing and argument images and also about the complex dependencies between hyperpaarameter. 
 
 [//]: # (Image References)
 
@@ -207,9 +209,11 @@ For the second image ...
 [image2]: ./examples/histogramBalancOfImages.PNG "Plot of how the training data is balanced"
 [image3]: ./examples/plotsPreprocessingOutput.png "Random Noise"
 [image4]: ./examples/formateAndBalancingAfterPreProcess.png 
-[image5]: ./examples/example01.jpg "No entry"
-[image6]: ./examples/example02.jpg "Speed limit (30km/h)"
-[image7]: ./examples/example03.jpg "Speed limit (80km/h)"
-[image8]: ./examples/example04.jpg "Yield"
-[image9]: ./examples/example05.jpg "Stop"
+[image5]: ./examples/cropexample01.jpg "No entry"
+[image6]: ./examples/cropexample02.jpg "Speed limit (30km/h)"
+[image7]: ./examples/cropexample03.jpg "Speed limit (80km/h)"
+[image8]: ./examples/cropexample04.jpg "Yield"
+[image9]: ./examples/cropexample05.jpg "Stop"
 [image10]:./examples/originalArgumented.jpg "original and argumented"
+[image11]: ./examples/preditctionsNewImages.PNG "prediction off five new images"
+[image12]: ./examples/predisctionExample.PNG "prediction plots"
