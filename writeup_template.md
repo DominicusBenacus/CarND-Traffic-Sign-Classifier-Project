@@ -102,18 +102,21 @@ My final model consisted of the following layers:
 | Layer         		|     Description	        					| 
 |:---------------------:|:---------------------------------------------:| 
 | Input         		| 32x32x1 grayscaled image   					| 
-| Convolution 5x5     	| 1x1 stride, same valid, outputs 28x28x6   	|
+| Convolution 3x3     	| 1x1 stride, same valid, outputs 30x30x8   	|
 | RELU					| conv1 = tf.nn.relu(conv1)						|
-| Max pooling	      	| 2x2 stride,  outputs 5x5x16    				|
-| Convolution 5x5	    | 1x1 stride, same valid, outputs 10x10x16		|
-| RELU					| conv1 = tf.nn.relu(conv1)						|
-| Max pooling	      	| 2x2 stride,  outputs 5x5x16    				|
-| flatten       	    | Input = 5x5x16 output 400     				|
+| Max pooling	      	| 2x2 stride,  outputs 15x15x8    				|
+| Convolution 3x3	    | 1x1 stride, same valid, outputs 13x13x16		|
+| RELU					| conv1 = tf.nn.relu(conv2)						|
+| Max pooling	      	| 2x2 stride,  outputs 7x7x16    				|
+| Convolution 3x3	    | 1x1 stride, same valid, outputs 5x5x32		|
+| RELU					| conv1 = tf.nn.relu(conv3)						|
+| Max pooling	      	| 2x2 stride,  outputs 2x2x32    				|
+| flatten       	    | Input = 2x2x32 output 128     				|
 | Fully connected		| Input = 400. Output = 120						|
 | RELU					| conv1 = tf.nn.relu(fc1)						|
 | Fully connected		| Input = 400. Output = 84						|
 | RELU					| conv1 = tf.nn.relu(fc2)						|
-| Fully connected		| Input = 84. Output = 84						|
+| Fully connected		| Input = 84. Output = 43						|
 |						|												|
 |						|												|
  
@@ -132,6 +135,12 @@ The batch size: 128 I like this value. So I experienced a lot with the parameter
 Number of epoch: I started with 8 epoch and then 10,16,20,30. As I take the non balanced and argumented training set a number of epoch raound about 8 worked best. So after my trainng set increased up to 113000 this number of epochs did not work very well anymore. So I alternately played with the learning rate and the number of epoch. So in my feeling the best result after a few training sessions was to take a learning rate of 0.0008 and a number of epochs of 30. One could play even harder to get a better acurracy but I spend much tie in this project and learned a lot about prepracessing and also hyperparameter so I think that is also a goad result out of this project.
 
 So the two other hyperparameter like mu and sigma I did not change. i played a short time but the results were not good.
+
+#My Model after Review:
+* At first I spend a lot of time to get a better acurracy. After at least one hundret posts to the forum and a lot of experimentation I need to stop here because my time exploded. What did I do?:
+* So like suggested in the review I played a lot with the architecture because the model underfitted the data set. I addad different conv layer which drive me into negative output territory. Next step was not to get into negative values for high and width. I addad one convlayer. So in the next stept I saw my model is still underfit the data. SO I change the number of filter per conv nets to handle more complexity according to the extended data set of at least 2000 images per class. After that I changed the filter sizes 3*3,5*5, 2*2.... No Improvement. The model do not learn. So I tune the learning rate to 0.00001. No improvement of the acurracy. So my model still underfits the data set. So currently I use the architecture described in the point 3. 
+
+So in my opinion I learned a lot how to extend a model and which number of filter and how to choose high and width. Additionaly I added some measurement methods (plot of training loss, validation loss, validation acurracy,training acurracy) to the training pipeline which will help in future to improve the network better and with more knowledge about what needs changes.  On this point I am very late with submission and the next project submission stands out already. In my opinion I have understand the know how and how to change architecture with tensorflow and also the possibilities of pre processing methods.  
 
 ####5. Describe the approach taken for finding a solution. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
 
@@ -199,7 +208,10 @@ Description of the results for ne Images:
 
 The fourth sign is a yield but there is also  another sign in the test image. So here I think it would als be difficult for better trained models to decide whether there is a yield or something else.
 
-I wonde why the speed limit 80 is classified as 120 because this is a very high quality image without shadows.
+I wonder why the speed limit 80 is classified as 120 because this is a very high quality image without shadows.
+
+Compare to the test set data out of the training:
+The accuracy on the captured images is significant lower like on the testing set. So that depends in my opinion on the fact that the captured images do not have any preprocessing and some captured images are not clearly in what sign is the sign to classify.
 
 At the end I am very satisfied with my learning curve depending on all the IT impediments on the beginning according to aws or my company notebook. Sure the validation result of my model is not very good but I learned a lot about preprocessing and argument images and also about the complex dependencies between hyperpaarameter. 
 
